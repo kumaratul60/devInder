@@ -3,6 +3,8 @@ const app = express();
 
 const PORT = 3000;
 
+// if define route like app.use it means it can handle all types of the request
+
 app.get("/user", (req, res) => {
   res.send("Hello World from server12");
 });
@@ -27,15 +29,58 @@ app.get(
     console.log("handling req 1");
     res.send("Hello World from server1");
     next();
-    // if we comment the res.send then it  going to print the second one because first request is not completed so node calling the next request.
+    // if we comment the res.send then it going to print the second one because first request is not completed so node calling the next request.
   },
-  (req, res) => {j
+  (req, res, next) => {
     console.log("handling req 2");
-    res.send("Hello World from server2");
+    // res.send("Hello World from server2");
+    next();
+  },
+  (req, res) => {
+    console.log("handling req 3");
+    res.send("Hello World from server3");
+  }
+);
+// pass as array of functions also
+app.get("/nextUser2", [
+  (req, res, next) => {
+    console.log("handling req 1");
+    // res.send("Hello World from server1");
+    next();
+  },
+  (req, res, next) => {
+    console.log("handling req 2");
+    // res.send("Hello World from server2");
+    next();
+  },
+  (req, res) => {
+    console.log("handling req 3");
+    res.send("Hello World from server3");
+  },
+]);
+
+// can do it also
+app.get(
+  "/nextUser3",
+  [
+    (req, res, next) => {
+      console.log("handling req 1");
+      // res.send("Hello World from server1");
+      next(); 
+    },
+    (req, res, next) => {
+      console.log("handling req 2");
+      // res.send("Hello World from server2");
+      next();
+    },
+  ],
+  (req, res) => {
+    console.log("handling req 3");
+    res.send("Hello World from server3");
   }
 );
 app.use((req, res) => {
-  res.send("Hello World from server");
+  res.send("Hello World from server use");
 });
 
 app.listen(PORT, () => {
