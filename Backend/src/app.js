@@ -1,9 +1,11 @@
 const express = require("express");
+const { validateUser } = require("./utils/validatetestUser");
 const app = express();
 
 const PORT = 3000;
 
 // if define route like app.use it means it can handle all types of the request
+// app.use and app.all are same but app.use is more specific.
 
 app.get("/user", (req, res) => {
   res.send("Hello World from server12");
@@ -66,7 +68,7 @@ app.get(
     (req, res, next) => {
       console.log("handling req 1");
       // res.send("Hello World from server1");
-      next(); 
+      next();
     },
     (req, res, next) => {
       console.log("handling req 2");
@@ -79,6 +81,14 @@ app.get(
     res.send("Hello World from server3");
   }
 );
+
+app.get("/seperate", (req, res) => {
+  res.send("Hello World from server seperate");
+});
+
+app.get("/validateUser", validateUser, (req, res) => {
+  res.send("Hello World from server validateUser");
+});
 app.use((req, res) => {
   res.send("Hello World from server use");
 });
