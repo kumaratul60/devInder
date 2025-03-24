@@ -82,15 +82,42 @@ app.get(
   }
 );
 
-app.get("/seperate", (req, res) => {
-  res.send("Hello World from server seperate");
+app.get("/separate", (req, res) => {
+  res.send("Hello World from server separate");
 });
 
 app.get("/validateUser", validateUser, (req, res) => {
   res.send("Hello World from server validateUser");
 });
-app.use((req, res) => {
-  res.send("Hello World from server use");
+
+/* here is catch with express params: order matters a-lot
+1. if provide 2 params: then it takes first as req, and second as res
+2. if provide 3 params: then  it takes first as req, and second as res, and third as next.
+3. if provide 4 params: then it takes first as err(error), second as req, third as res, and fourth as next.
+
+
+*/
+// app.use("/",(req, res) => {
+//   res.send("Hello World from server use");
+// });
+
+// app.use("/",(req, res, next) => {
+//   console.log("Hello World from server use with next");
+//   // res.send("Hello World from server use");
+//   next()
+// });
+app.get("/getError", (req, res) => {
+  //logic of business code
+  throw new Error("error here");
+  // best way to use try catch always
+});
+
+app.use("/", (err, req, res, next) => {
+  // next();
+  // res.send("Hello World from server use");
+  if (err) {
+    res.status(500).send("internal server error");
+  }
 });
 
 app.listen(PORT, () => {
